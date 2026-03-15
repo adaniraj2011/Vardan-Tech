@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0d0f14;--sur:#161920;--sur2:#1e2230;--bdr:rgba(255,255,255,0.07);--bdr2:rgba(255,255,255,0.13);--txt:#eef0f5;--mut:#7a8099;--acc:#6c63ff;--ac2:#00d4aa;--wrn:#f5a623;--dan:#ff5c5c;--suc:#4cd964;--fn:'DM Sans',sans-serif;--dp:'Syne',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;font-family:var(--fn);font-size:14px;color:var(--txt);background:var(--bg);}
+
+/* LOGIN */
+#login{display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;min-height:400px;background:var(--bg);}
+.lcard{background:var(--sur);border:1px solid var(--bdr2);border-radius:18px;padding:28px 28px 24px;width:340px;text-align:center;}
+.logo{font-family:var(--dp);font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--acc),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sub{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;margin-bottom:20px;}
+.ulabel{font-size:12px;color:var(--mut);margin-bottom:10px;}
+.ulist{display:flex;flex-direction:column;gap:6px;}
+.ubtn{width:100%;background:var(--sur2);border:1px solid var(--bdr2);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;transition:border-color .15s,background .15s;color:var(--txt);}
+.ubtn:hover{border-color:var(--acc);background:rgba(108,99,255,0.1);}
+.uav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.uname{font-size:13px;font-weight:500;}
+.urole{font-size:11px;color:var(--mut);margin-top:1px;}
+
+/* PIN */
+.plabel{font-size:13px;color:var(--mut);margin-bottom:14px;}
+.pdots{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+.pdot{width:13px;height:13px;border-radius:50%;border:2px solid var(--bdr2);transition:all .2s;}
+.pdot.on{background:var(--acc);border-color:var(--acc);}
+.pdot.err{background:var(--dan);border-color:var(--dan);}
+.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:220px;margin:0 auto;}
+.pkey{background:var(--sur2);border:1px solid var(--bdr2);border-radius:9px;padding:12px;font-size:17px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;color:var(--txt);font-family:var(--dp);}
+.pkey:hover{background:rgba(108,99,255,0.18);border-color:var(--acc);}
+.pkey:active{transform:scale(.94);}
+.perr{color:var(--dan);font-size:12px;margin-top:10px;min-height:16px;}
+.back{font-size:12px;color:var(--mut);cursor:pointer;margin-top:12px;text-decoration:underline;display:inline-block;}
+.back:hover{color:var(--txt);}
+
+/* APP */
+#app{display:none;width:100%;}
+.layout{display:flex;min-height:600px;}
+.side{width:200px;background:var(--sur);border-right:1px solid var(--bdr);flex-shrink:0;display:flex;flex-direction:column;}
+.slogo{padding:18px 16px 14px;border-bottom:1px solid var(--bdr);}
+.slogo-t{font-family:var(--dp);font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--acc),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.slogo-s{font-size:10px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase;margin-top:1px;}
+.snav{padding:8px 0;flex:1;overflow-y:auto;}
+.nsec{padding:6px 16px 2px;font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:13px;color:var(--mut);transition:all .15s;border-left:2px solid transparent;}
+.ni:hover{color:var(--txt);background:rgba(255,255,255,0.04);}
+.ni.on{color:var(--acc);border-left-color:var(--acc);background:rgba(108,99,255,0.08);}
+.nbadge{margin-left:auto;background:var(--dan);color:#fff;font-size:10px;padding:1px 5px;border-radius:8px;font-weight:600;}
+.sfot{padding:12px 16px;border-top:1px solid var(--bdr);}
+.sfrow{display:flex;align-items:center;gap:8px;}
+.sfav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;}
+.sfn{font-size:13px;font-weight:500;}
+.sfr{font-size:11px;color:var(--mut);}
+.sout{font-size:11px;color:var(--mut);cursor:pointer;margin-top:6px;text-decoration:underline;}
+.sout:hover{color:var(--dan);}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;}
+.tbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.tbar-t{font-family:var(--dp);font-size:16px;font-weight:700;}
+.tbar-a{display:flex;gap:8px;}
+.pg{padding:20px 22px;flex:1;}
+
+/* UI */
+.btn{padding:6px 14px;border-radius:7px;border:none;cursor:pointer;font-family:var(--fn);font-size:12px;font-weight:500;transition:all .15s;}
+.bp{background:var(--acc);color:#fff;}.bp:hover{background:#7b74ff;}
+.bg{background:transparent;color:var(--mut);border:1px solid var(--bdr2);}.bg:hover{color:var(--txt);background:var(--sur2);}
+.bs{padding:4px 10px;font-size:11px;}
+.bd{background:rgba(255,92,92,0.15);color:var(--dan);border:1px solid rgba(255,92,92,0.3);}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.sc{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;}
+.sl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;}
+.sv{font-family:var(--dp);font-size:24px;font-weight:800;margin-top:4px;}
+.ss{font-size:11px;color:var(--mut);margin-top:3px;}
+.crd{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;}
+.ch{padding:12px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:13px;font-weight:600;}
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;text-align:left;font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--bdr);font-weight:500;}
+td{padding:9px 12px;border-bottom:1px solid var(--bdr);font-size:12px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.bdg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500;}
+.ba{background:rgba(76,217,100,0.15);color:var(--suc);}
+.bw{background:rgba(245,166,35,0.15);color:var(--wrn);}
+.bdd{background:rgba(255,92,92,0.15);color:var(--dan);}
+.bi{background:rgba(108,99,255,0.15);color:var(--acc);}
+.bm{background:var(--sur2);color:var(--mut);}
+.chip{display:inline-flex;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:500;}
+.cig{background:rgba(225,48,108,0.15);color:#e1306c;}
+.cfb{background:rgba(24,119,242,0.15);color:#1877f2;}
+.cli{background:rgba(10,102,194,0.15);color:#0a66c2;}
+.rp{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.ra{background:rgba(108,99,255,0.2);color:var(--acc);}
+.rm{background:rgba(0,212,170,0.15);color:var(--ac2);}
+.rs{background:rgba(245,166,35,0.15);color:var(--wrn);}
+.rv{background:rgba(122,128,153,0.2);color:var(--mut);}
+.ti{padding:9px 12px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;}
+.ti:last-child{border-bottom:none;}
+.tck{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tck.dn{background:var(--suc);border-color:var(--suc);}
+.ttx{flex:1;font-size:12px;}
+.ttx.dn{text-decoration:line-through;color:var(--mut);}
+.tcl{font-size:10px;color:var(--mut);}
+.tpr{font-size:10px;padding:2px 6px;border-radius:8px;font-weight:600;}
+.ph{background:rgba(255,92,92,0.15);color:var(--dan);}
+.pm{background:rgba(245,166,35,0.15);color:var(--wrn);}
+.pl{background:rgba(76,217,100,0.15);color:var(--suc);}
+.pi{padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;}
+.pi:last-child{border-bottom:none;}
+.pdt{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.pig{background:#e1306c;}.pfb{background:#1877f2;}.pli{background:#0a66c2;}
+.tcols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.es{text-align:center;padding:30px;color:var(--mut);}
+.es .em{font-size:30px;margin-bottom:8px;}
+.tabs{display:flex;gap:3px;padding:3px;background:var(--sur2);border-radius:9px;margin-bottom:16px;max-width:280px;}
+.tab{padding:6px 14px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--mut);transition:all .15s;flex:1;text-align:center;}
+.tab.on{background:var(--sur);color:var(--txt);font-weight:500;}
+.srch{background:var(--sur2);border:1px solid var(--bdr2);border-radius:7px;padding:7px 12px;color:var(--txt);font-family:var(--fn);font-size:12px;outline:none;width:240px;}
+.srch:focus{border-color:var(--acc);}
+.alrt{border-radius:9px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.aw{background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.25);color:var(--wrn);}
+.ad{background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.25);color:var(--dan);}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:12px;}
+.cdh{text-align:center;font-size:10px;color:var(--mut);padding:3px 0;}
+.cday{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;position:relative;font-size:11px;}
+.cday:hover{background:var(--sur2);}
+.cday.cdt{background:rgba(108,99,255,0.15);color:var(--acc);font-weight:600;}
+.cday.chp::after{content:'';width:4px;height:4px;background:var(--ac2);border-radius:50%;position:absolute;bottom:3px;}
+.fi{background:var(--sur2);border:1px solid var(--bdr2);border-radius:7px;padding:8px 11px;color:var(--txt);font-family:var(--fn);font-size:12px;outline:none;width:100%;}
+.fi:focus{border-color:var(--acc);}
+select.fi option{background:var(--sur2);}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;font-weight:500;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fgf{grid-column:1/-1;}
+.fa{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:flex;align-items:center;justify-content:center;}
+.mb{background:var(--sur);border:1px solid var(--bdr2);border-radius:14px;padding:24px;width:500px;max-width:95vw;max-height:88vh;overflow-y:auto;}
+.mt{font-family:var(--dp);font-size:16px;font-weight:700;margin-bottom:16px;}
+.itot{font-family:var(--dp);font-size:20px;font-weight:800;color:var(--suc);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="lcard">
+    <div class="logo">Web Wonders</div>
+    <div class="sub">Agency HQ</div>
+    <div id="sp-users">
+      <div class="ulabel">Select your account</div>
+      <div class="ulist" id="ulist"></div>
+    </div>
+    <div id="sp-pin" style="display:none">
+      <div class="plabel" id="pgreet">Enter your PIN</div>
+      <div class="pdots">
+        <div class="pdot" id="d0"></div><div class="pdot" id="d1"></div>
+        <div class="pdot" id="d2"></div><div class="pdot" id="d3"></div>
+      </div>
+      <div class="ppad" id="ppad"></div>
+      <div class="perr" id="perr"></div>
+      <span class="back" id="backbtn">← Different account</span>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="layout">
+    <div class="side">
+      <div class="slogo"><div class="slogo-t">Web Wonders</div><div class="slogo-s">Agency HQ</div></div>
+      <div class="snav" id="snav">
+        <div class="nsec">Overview</div>
+        <div class="ni on" data-p="dashboard"><span>📊</span><span>Dashboard</span></div>
+        <div class="nsec">Work</div>
+        <div class="ni" data-p="clients"><span>👥</span><span>Clients</span></div>
+        <div class="ni" data-p="tasks"><span>✅</span><span>Tasks</span><span class="nbadge" id="tbadge" style="display:none">0</span></div>
+        <div class="ni" data-p="scheduler"><span>📅</span><span>Scheduler</span></div>
+        <div class="ni" data-p="renewals"><span>🔔</span><span>Renewals</span><span class="nbadge" id="rbadge" style="display:none;background:var(--wrn)">0</span></div>
+        <div class="nsec">Finance</div>
+        <div class="ni" data-p="invoices"><span>🧾</span><span>Invoices</span></div>
+        <div class="nsec">Reports</div>
+        <div class="ni" data-p="reports"><span>📈</span><span>Reports</span></div>
+        <div class="nsec" id="nsec-admin">Admin</div>
+        <div class="ni" data-p="users" id="ni-users"><span>🔐</span><span>Users</span></div>
+        <div class="nsec">Account</div>
+        <div class="ni" data-p="settings"><span>⚙️</span><span>Settings</span></div>
+      </div>
+      <div class="sfot">
+        <div class="sfrow"><div class="sfav" id="sfav"></div><div><div class="sfn" id="sfn"></div><div class="sfr" id="sfr"></div></div></div>
+        <div class="sout" id="sout">Log out</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="tbar"><div class="tbar-t" id="ptitle">Dashboard</div><div class="tbar-a" id="tactions"></div></div>
+      <div class="pg" id="pgcontent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="mb" id="mbody"></div>
+</div>
+
+<script>
+var D={users:[],clients:[],tasks:[],posts:[],invoices:[],reports:[],agencyName:'Web Wonders',ownerName:'',gstNumber:''};
+var CU=null,PB='',SU=null,calM,calY,calSel,taskTab='pending',cSearch='';
+var COLORS=['#6c63ff','#00d4aa','#f5a623','#ff5c5c','#4cd964','#1877f2','#e1306c','#ff9500'];
+var pickedColor='#6c63ff';
+
+function can(a){var r=CU?CU.role:'';if(a==='add'||a==='edit')return r==='admin'||r==='manager';if(a==='del')return r==='admin';if(a==='task')return r==='admin'||r==='manager'||r==='staff';if(a==='users')return r==='admin';return false;}
+function load(){try{var s=localStorage.getItem('ww4');if(s){var p=JSON.parse(s);for(var k in p)D[k]=p[k];}}catch(e){}}
+function save(){try{localStorage.setItem('ww4',JSON.stringify(D));}catch(e){}}
+function uid(){return Math.random().toString(36).slice(2,9);}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function gc(id){return D.clients.find(function(c){return c.id===id;})||{name:'—'};}
+function fd(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function du(d){if(!d)return 999;return Math.ceil((new Date(d+'T00:00:00')-new Date())/86400000);}
+function fm(n){return '\u20b9'+Number(n).toLocaleString('en-IN');}
+function pchip(p){var c=p==='ig'?'cig':p==='fb'?'cfb':'cli',l=p==='ig'?'IG':p==='fb'?'FB':'LI';return '<span class="chip '+c+'">'+l+'</span>';}
+function plbl(p){return p==='ig'?'Instagram':p==='fb'?'Facebook':'LinkedIn';}
+function rpill(r){return '<span class="rp r'+r.charAt(0)+'">'+cap(r)+'</span>';}
+function copts(sel){return D.clients.map(function(c){return'<option value="'+c.id+'"'+(sel===c.id?' selected':'')+'>'+c.name+'</option>';}).join('');}
+
+function seed(){
+  if(D.users.length)return;
+  D.users=[{id:'u1',name:'Owner',username:'owner',pin:'1234',role:'admin',color:'#6c63ff',active:true},{id:'u2',name:'Manager',username:'manager',pin:'2222',role:'manager',color:'#00d4aa',active:true},{id:'u3',name:'Staff',username:'staff',pin:'3333',role:'staff',color:'#f5a623',active:true},{id:'u4',name:'Viewer',username:'viewer',pin:'4444',role:'viewer',color:'#7a8099',active:true}];
+  var f=function(n){var d=new Date();d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];};
+  var b=function(n){var d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0];};
+  var td=new Date().toISOString().split('T')[0];
+  D.clients=[{id:'c1',name:'Mehta Jewellers',contact:'Raj Mehta',email:'raj@mehtajewels.com',phone:'9876543210',platforms:['ig','fb'],domain:'mehtajewels.com',domainExp:f(12),emailExp:f(8),status:'active',notes:'Gold & diamond brand.'},{id:'c2',name:'TechTrend Solutions',contact:'Priya Shah',email:'priya@techtrend.in',phone:'9123456780',platforms:['li','fb'],domain:'techtrend.in',domainExp:f(45),emailExp:f(60),status:'active',notes:'B2B software.'},{id:'c3',name:'Spice Route Restaurant',contact:'Ahmed Khan',email:'ahmed@spiceroute.in',phone:'9988776655',platforms:['ig','fb'],domain:'spiceroute.in',domainExp:b(3),emailExp:f(30),status:'active',notes:'Daily posts on IG.'},{id:'c4',name:'FitLife Gym',contact:'Sneha Patel',email:'sneha@fitlife.in',phone:'9012345678',platforms:['ig','fb','li'],domain:'fitlife.in',domainExp:f(90),emailExp:f(5),status:'active',notes:'4 locations.'}];
+  D.tasks=[{id:'t1',text:'Design 3 posts for Mehta Jewellers',client:'c1',priority:'high',done:false,due:td},{id:'t2',text:'Reply to Priya Shah email',client:'c2',priority:'med',done:false,due:td},{id:'t3',text:'Renew Spice Route domain ASAP',client:'c3',priority:'high',done:false,due:td},{id:'t4',text:'Upload content calendar FitLife',client:'c4',priority:'med',done:true,due:b(1)}];
+  D.posts=[{id:'p1',client:'c1',platform:'ig',caption:'Celebrate love with our new diamond collection',date:f(1),time:'10:00',status:'scheduled'},{id:'p2',client:'c3',platform:'ig',caption:'Sunday brunch special — Spice Route',date:f(0),time:'09:00',status:'scheduled'},{id:'p3',client:'c4',platform:'fb',caption:'Transform your body in 90 days',date:f(3),time:'08:00',status:'scheduled'},{id:'p4',client:'c2',platform:'li',caption:'How AI is reshaping enterprise workflows',date:f(4),time:'09:30',status:'draft'}];
+  D.invoices=[{id:'i1',client:'c1',number:'INV-001',amount:25000,date:b(10),due:f(20),status:'paid',items:[{desc:'Social Media - May',qty:1,rate:25000}]},{id:'i2',client:'c2',number:'INV-002',amount:35000,date:b(5),due:f(25),status:'pending',items:[{desc:'LinkedIn Strategy',qty:1,rate:35000}]},{id:'i3',client:'c3',number:'INV-003',amount:18000,date:b(30),due:b(5),status:'overdue',items:[{desc:'Instagram Mgmt - April',qty:1,rate:18000}]},{id:'i4',client:'c4',number:'INV-004',amount:42000,date:b(2),due:f(28),status:'pending',items:[{desc:'Full Social Package',qty:1,rate:42000}]}];
+  D.reports=[{id:'r1',client:'c1',month:'April 2025',reach:45200,impressions:128000,engagement:'4.2%',posts:12,followers:'+320',notes:'Strong Reels performance.'}];
+  save();
+}
+
+/* ===== LOGIN ===== */
+function initLogin(){
+  var ul=document.getElementById('ulist');
+  ul.innerHTML='';
+  var active=D.users.filter(function(u){return u.active;});
+  for(var i=0;i<active.length;i++){
+    (function(u){
+      var b=document.createElement('button');
+      b.className='ubtn';
+      b.type='button';
+      b.innerHTML='<div class="uav" style="background:'+u.color+'25;color:'+u.color+'">'+u.name.charAt(0)+'</div><div><div class="uname">'+u.name+'</div><div class="urole">'+cap(u.role)+'</div></div>';
+      b.addEventListener('click',function(){selectU(u.id);});
+      ul.appendChild(b);
+    })(active[i]);
+  }
+}
+
+function selectU(id){
+  SU=id;
+  var u=D.users.find(function(x){return x.id===id;});
+  PB='';
+  updDots();
+  document.getElementById('pgreet').textContent='Hi '+u.name+'! Enter your PIN';
+  document.getElementById('perr').textContent='';
+  document.getElementById('sp-users').style.display='none';
+  document.getElementById('sp-pin').style.display='block';
+  buildPad();
+}
+
+function buildPad(){
+  var pp=document.getElementById('ppad');
+  pp.innerHTML='';
+  var keys=['1','2','3','4','5','6','7','8','9','','0','⌫'];
+  for(var i=0;i<keys.length;i++){
+    (function(k){
+      if(k===''){
+        var sp=document.createElement('div');
+        pp.appendChild(sp);
+        return;
+      }
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='pkey';
+      b.textContent=k;
+      if(k==='⌫')b.style.fontSize='14px';
+      b.addEventListener('click',function(){
+        if(k==='⌫'){PB=PB.slice(0,-1);updDots();}
+        else if(PB.length<4){PB+=k;updDots();if(PB.length===4)setTimeout(checkPin,130);}
+      });
+      pp.appendChild(b);
+    })(keys[i]);
+  }
+}
+
+function updDots(err){
+  for(var i=0;i<4;i++){
+    var d=document.getElementById('d'+i);
+    if(!d)continue;
+    d.className='pdot'+(i<PB.length?(err?' err':' on'):'');
+  }
+}
+
+function checkPin(){
+  var u=D.users.find(function(x){return x.id===SU;});
+  if(u&&u.pin===PB){
+    CU=u;
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    setupSide();
+    goto('dashboard');
+  }else{
+    document.getElementById('perr').textContent='Wrong PIN, try again.';
+    updDots(true);
+    setTimeout(function(){PB='';updDots();document.getElementById('perr').textContent='';},900);
+  }
+}
+
+document.getElementById('backbtn').addEventListener('click',function(){
+  document.getElementById('sp-pin').style.display='none';
+  document.getElementById('sp-users').style.display='block';
+  PB='';SU=null;updDots();
+});
+
+document.getElementById('sout').addEventListener('click',function(){
+  CU=null;PB='';SU=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.getElementById('sp-pin').style.display='none';
+  document.getElementById('sp-users').style.display='block';
+  initLogin();
+});
+
+function setupSide(){
+  var u=CU;
+  var av=document.getElementById('sfav');
+  av.textContent=u.name.charAt(0);
+  av.style.background=u.color+'25';
+  av.style.color=u.color;
+  document.getElementById('sfn').textContent=u.name;
+  document.getElementById('sfr').textContent=cap(u.role);
+  var show=can('users');
+  document.getElementById('nsec-admin').style.display=show?'':'none';
+  document.getElementById('ni-users').style.display=show?'':'none';
+}
+
+/* ===== NAV ===== */
+var navItems=document.querySelectorAll('.ni');
+for(var _i=0;_i<navItems.length;_i++){
+  (function(el){
+    el.addEventListener('click',function(){goto(el.getAttribute('data-p'));});
+  })(navItems[_i]);
+}
+
+function goto(page){
+  var titles={dashboard:'Dashboard',clients:'Clients',tasks:'My Tasks',scheduler:'Post Scheduler',renewals:'Renewals',invoices:'Invoices',reports:'Reports',users:'User Management',settings:'Settings'};
+  document.getElementById('ptitle').textContent=titles[page]||page;
+  var nis=document.querySelectorAll('.ni');
+  for(var i=0;i<nis.length;i++){nis[i].classList.remove('on');if(nis[i].getAttribute('data-p')===page)nis[i].classList.add('on');}
+  var ta=document.getElementById('tactions');
+  ta.innerHTML='';
+  if(can('add')){
+    var bmap={clients:['+ Add Client','openAddClient()'],tasks:['+ Add Task','openAddTask()'],scheduler:['+ Schedule Post','openAddPost()'],invoices:['+ New Invoice','openAddInvoice()'],reports:['+ Add Report','openAddReport()']};
+    if(bmap[page]){var bb=document.createElement('button');bb.className='btn bp';bb.textContent=bmap[page][0];bb.setAttribute('onclick',bmap[page][1]);ta.appendChild(bb);}
+  }
+  if(page==='users'&&can('users')){var bb=document.createElement('button');bb.className='btn bp';bb.textContent='+ Add User';bb.setAttribute('onclick','openAddUser()');ta.appendChild(bb);}
+  var fns={dashboard:rDash,clients:rClients,tasks:rTasks,scheduler:rSched,renewals:rRenewals,invoices:rInvoices,reports:rReports,users:rUsers,settings:rSettings};
+  document.getElementById('pgcontent').innerHTML=(fns[page]?fns[page]():'<div class="es"><div class="em">🚧</div><div>Coming soon</div></div>');
+  updBadges();
+}
+
+function updBadges(){
+  var pt=D.tasks.filter(function(t){return!t.done;}).length;
+  var tb=document.getElementById('tbadge');if(tb){tb.textContent=pt;tb.style.display=pt?'':'none';}
+  var ur=D.clients.filter(function(c){return du(c.domainExp)<=30||du(c.emailExp)<=30;}).length;
+  var rb=document.getElementById('rbadge');if(rb){rb.textContent=ur;rb.style.display=ur?'':'none';}
+}
+
+/* ===== PAGES ===== */
+function rDash(){
+  var ac=D.clients.filter(function(c){return c.status==='active';}).length;
+  var pt=D.tasks.filter(function(t){return!t.done;}).length;
+  var pr=D.invoices.filter(function(i){return i.status==='pending';}).reduce(function(a,i){return a+Number(i.amount);},0);
+  var od=D.invoices.filter(function(i){return i.status==='overdue';}).length;
+  var ur=D.clients.filter(function(c){return du(c.domainExp)<=30||du(c.emailExp)<=30;});
+  var up=D.posts.filter(function(p){return p.status==='scheduled';}).sort(function(a,b){return a.date>b.date?1:-1;}).slice(0,4);
+  var tt=D.tasks.filter(function(t){return!t.done;}).slice(0,5);
+  var h='<div class="sgrid"><div class="sc"><div class="sl">Active Clients</div><div class="sv" style="color:var(--acc)">'+ac+'</div><div class="ss">'+D.clients.length+' total</div></div><div class="sc"><div class="sl">Pending Tasks</div><div class="sv" style="color:var(--wrn)">'+pt+'</div></div><div class="sc"><div class="sl">Pending Revenue</div><div class="sv" style="color:var(--suc)">'+fm(pr)+'</div><div class="ss">'+(od?'<span style="color:var(--dan)">'+od+' overdue</span>':'on track')+'</div></div><div class="sc"><div class="sl">Urgent Renewals</div><div class="sv" style="color:var(--dan)">'+ur.length+'</div></div></div>';
+  h+='<div class="tcols"><div class="crd"><div class="ch"><div class="ct">Today\'s Tasks</div><button class="btn bg bs" onclick="goto(\'tasks\')">All →</button></div>';
+  if(tt.length){for(var i=0;i<tt.length;i++){var t=tt[i];h+='<div class="ti"><div class="tck'+(t.done?' dn':'')+'" onclick="'+(can('task')?'toggleTask(\''+t.id+'\')':'')+'">'+(t.done?'<span style="color:#fff;font-size:9px">✓</span>':'')+'</div><div style="flex:1"><div class="ttx'+(t.done?' dn':'')+'">'+t.text+'</div><div class="tcl">'+gc(t.client).name+'</div></div><span class="tpr p'+t.priority+'">'+t.priority+'</span></div>';}}
+  else h+='<div class="es"><div class="em">🎉</div><div>All done!</div></div>';
+  h+='</div><div class="crd"><div class="ch"><div class="ct">Upcoming Posts</div><button class="btn bg bs" onclick="goto(\'scheduler\')">All →</button></div>';
+  if(up.length){for(var i=0;i<up.length;i++){var p=up[i];h+='<div class="pi"><div class="pdt p'+p.platform+'"></div><div style="flex:1"><div style="font-size:12px">'+p.caption.substring(0,45)+'…</div><div style="font-size:10px;color:var(--mut)">'+gc(p.client).name+' · '+fd(p.date)+'</div></div>'+pchip(p.platform)+'</div>';}}
+  else h+='<div class="es"><div class="em">📭</div><div>No posts</div></div>';
+  h+='</div></div>';
+  if(ur.length){h+='<div class="crd"><div class="ch"><div class="ct">⚠️ Renewal Alerts</div><button class="btn bg bs" onclick="goto(\'renewals\')">All →</button></div><div style="padding:14px">';for(var i=0;i<ur.length;i++){var c=ur[i],dd=du(c.domainExp),de=du(c.emailExp);h+='<div class="alrt '+(dd<0||de<0?'ad':'aw')+'"><b>'+c.name+'</b>'+(dd<=30?'<span>Domain: '+(dd<0?'EXPIRED':dd+'d left')+'</span>':'')+(de<=30?'<span>Email: '+(de<0?'EXPIRED':de+'d left')+'</span>':'')+'</div>';}h+='</div></div>';}
+  return h;
+}
+
+function rClients(){
+  var fl=D.clients.filter(function(c){return c.name.toLowerCase().indexOf(cSearch.toLowerCase())>=0||c.contact.toLowerCase().indexOf(cSearch.toLowerCase())>=0;});
+  var h='<div style="margin-bottom:12px;display:flex;gap:10px;align-items:center"><input class="srch" placeholder="Search…" value="'+cSearch+'" oninput="cSearch=this.value;goto(\'clients\')"><span style="color:var(--mut);font-size:12px">'+fl.length+' clients</span></div><div class="crd"><table><thead><tr><th>Client</th><th>Contact</th><th>Platforms</th><th>Domain</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+  if(fl.length){for(var i=0;i<fl.length;i++){var c=fl[i],dd=du(c.domainExp),de=du(c.emailExp);h+='<tr><td><div style="font-weight:500">'+c.name+'</div><div style="font-size:10px;color:var(--mut)">'+c.domain+'</div></td><td><div>'+c.contact+'</div><div style="font-size:10px;color:var(--mut)">'+c.email+'</div></td><td>'+(c.platforms||[]).map(pchip).join(' ')+'</td><td style="color:'+(dd<0?'var(--dan)':dd<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.domainExp)+(dd<=30?' <small>('+( dd<0?'EXP':dd+'d')+')</small>':'')+'</td><td style="color:'+(de<0?'var(--dan)':de<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.emailExp)+(de<=30?' <small>'+(de<0?'EXP':de+'d')+'</small>':'')+'</td><td><span class="bdg '+(c.status==='active'?'ba':c.status==='paused'?'bw':'bm')+'">'+c.status+'</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn bg bs" onclick="viewClient(\''+c.id+'\')">View</button>'+(can('edit')?'<button class="btn bg bs" onclick="editClient(\''+c.id+'\')">Edit</button>':'')+(can('del')?'<button class="btn bd bs" onclick="delClient(\''+c.id+'\')">Del</button>':'')+'</td></tr>';}}
+  else h+='<tr><td colspan="7"><div class="es"><div class="em">👥</div><div>No clients found</div></div></td></tr>';
+  return h+'</tbody></table></div>';
+}
+
+function rTasks(){
+  var pnd=D.tasks.filter(function(t){return!t.done;}),dn=D.tasks.filter(function(t){return t.done;});
+  var lst=taskTab==='done'?dn:pnd;
+  var h='<div class="tabs"><div class="tab'+(taskTab==='pending'?' on':'')+'" onclick="taskTab=\'pending\';goto(\'tasks\')">Pending ('+pnd.length+')</div><div class="tab'+(taskTab==='done'?' on':'')+'" onclick="taskTab=\'done\';goto(\'tasks\')">Done ('+dn.length+')</div></div><div class="crd">';
+  if(lst.length){for(var i=0;i<lst.length;i++){var t=lst[i];h+='<div class="ti"><div class="tck'+(t.done?' dn':'')+'" onclick="'+(can('task')?'toggleTask(\''+t.id+'\')':'')+'">'+(t.done?'<span style="color:#fff;font-size:9px">✓</span>':'')+'</div><div style="flex:1"><div class="ttx'+(t.done?' dn':'')+'">'+t.text+'</div><div class="tcl">'+gc(t.client).name+' · '+fd(t.due)+'</div></div><span class="tpr p'+t.priority+'">'+t.priority+'</span>'+(can('del')?'<button class="btn bd bs" style="margin-left:6px" onclick="delTask(\''+t.id+'\')">✕</button>':'')+'</div>';}}
+  else h+='<div class="es"><div class="em">'+(taskTab==='done'?'🕐':'🎉')+'</div><div>'+(taskTab==='done'?'No completed tasks':'All caught up!')+'</div></div>';
+  return h+'</div>';
+}
+
+function rSched(){
+  var now=new Date(),m=calM!==undefined?calM:now.getMonth(),y=calY!==undefined?calY:now.getFullYear();
+  var mn=new Date(y,m).toLocaleString('en-IN',{month:'long',year:'numeric'});
+  var fd1=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
+  var days=[];for(var i=0;i<fd1;i++)days.push(null);for(var i=1;i<=dim;i++)days.push(i);
+  var pdates={};for(var i=0;i<D.posts.length;i++){var dd=new Date(D.posts[i].date+'T00:00:00');if(dd.getMonth()===m&&dd.getFullYear()===y)pdates[dd.getDate()]=true;}
+  var td=now.getDate(),tm=now.getMonth(),ty=now.getFullYear();
+  var sp=calSel?D.posts.filter(function(p){var dd=new Date(p.date+'T00:00:00');return dd.getDate()===calSel&&dd.getMonth()===m&&dd.getFullYear()===y;}):[],h='';
+  h+='<div class="tcols"><div class="crd"><div class="ch"><button class="btn bg bs" onclick="prevM()">←</button><div class="ct">'+mn+'</div><button class="btn bg bs" onclick="nextM()">→</button></div><div class="cgrid">';
+  var dl=['S','M','T','W','T','F','S'];for(var i=0;i<7;i++)h+='<div class="cdh">'+dl[i]+'</div>';
+  for(var i=0;i<days.length;i++){var d=days[i];if(!d){h+='<div></div>';continue;}var isT=d===td&&m===tm&&y===ty,hasP=pdates[d],isSel=d===calSel;h+='<div class="cday'+(isT?' cdt':'')+(hasP?' chp':'')+'" style="'+(isSel?'outline:2px solid var(--acc);':'')+'font-weight:'+(isSel?'600':'400')+'" onclick="calSel='+d+';goto(\'scheduler\')">'+d+'</div>';}
+  h+='</div></div><div class="crd"><div class="ch"><div class="ct">'+(calSel?'Posts · '+calSel+' '+mn:'Pick a date')+'</div></div>';
+  if(calSel){if(sp.length){for(var i=0;i<sp.length;i++){var p=sp[i];h+='<div class="pi"><div class="pdt p'+p.platform+'"></div><div style="flex:1"><div style="font-weight:500;font-size:12px">'+gc(p.client).name+'</div><div style="font-size:11px;color:var(--mut)">'+p.caption.substring(0,40)+'</div><div style="font-size:10px;color:var(--mut)">'+p.time+' · '+plbl(p.platform)+'</div></div><span class="bdg '+(p.status==='scheduled'?'ba':p.status==='draft'?'bw':'bm')+'">'+p.status+'</span></div>';}}else h+='<div class="es"><div class="em">📭</div><div>No posts</div></div>';}
+  else h+='<div class="es"><div class="em">📅</div><div>Select a date</div></div>';
+  h+='</div></div><div class="crd" style="margin-top:12px"><div class="ch"><div class="ct">All Posts</div></div><table><thead><tr><th>Client</th><th>Platform</th><th>Caption</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+  var sorted=D.posts.slice().sort(function(a,b){return a.date>b.date?1:-1;});
+  for(var i=0;i<sorted.length;i++){var p=sorted[i];h+='<tr><td>'+gc(p.client).name+'</td><td>'+pchip(p.platform)+'</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.caption+'</td><td>'+fd(p.date)+'</td><td><span class="bdg '+(p.status==='scheduled'?'ba':p.status==='draft'?'bw':'bi')+'">'+p.status+'</span></td><td style="display:flex;gap:4px">'+(can('edit')?'<button class="btn bg bs" onclick="editPost(\''+p.id+'\')">Edit</button>':'')+(can('del')?'<button class="btn bd bs" onclick="delPost(\''+p.id+'\')">Del</button>':'')+'</td></tr>';}
+  return h+'</tbody></table></div>';
+}
+function prevM(){var m=calM!==undefined?calM:new Date().getMonth(),y=calY!==undefined?calY:new Date().getFullYear();m--;if(m<0){m=11;y--;}calM=m;calY=y;calSel=null;goto('scheduler');}
+function nextM(){var m=calM!==undefined?calM:new Date().getMonth(),y=calY!==undefined?calY:new Date().getFullYear();m++;if(m>11){m=0;y++;}calM=m;calY=y;calSel=null;goto('scheduler');}
+
+function rRenewals(){
+  var all=D.clients.slice().sort(function(a,b){return Math.min(du(a.domainExp),du(a.emailExp))-Math.min(du(b.domainExp),du(b.emailExp));});
+  var h='<div class="crd"><table><thead><tr><th>Client</th><th>Domain</th><th>Domain Exp</th><th>Email Exp</th></tr></thead><tbody>';
+  for(var i=0;i<all.length;i++){var c=all[i],dd=du(c.domainExp),de=du(c.emailExp);h+='<tr><td style="font-weight:500">'+c.name+'</td><td style="color:var(--mut);font-size:11px">'+c.domain+'</td><td style="color:'+(dd<0?'var(--dan)':dd<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.domainExp)+(dd<=30?' <small>'+(dd<0?'⛔EXP':'⚠️'+dd+'d')+'</small>':'')+'</td><td style="color:'+(de<0?'var(--dan)':de<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.emailExp)+(de<=30?' <small>'+(de<0?'⛔EXP':'⚠️'+de+'d')+'</small>':'')+'</td></tr>';}
+  return h+'</tbody></table></div>';
+}
+
+function rInvoices(){
+  var tot=D.invoices.reduce(function(a,i){return a+Number(i.amount);},0);
+  var paid=D.invoices.filter(function(i){return i.status==='paid';}).reduce(function(a,i){return a+Number(i.amount);},0);
+  var pnd=D.invoices.filter(function(i){return i.status==='pending';}).reduce(function(a,i){return a+Number(i.amount);},0);
+  var od=D.invoices.filter(function(i){return i.status==='overdue';}).reduce(function(a,i){return a+Number(i.amount);},0);
+  var h='<div class="sgrid" style="margin-bottom:16px"><div class="sc"><div class="sl">Total</div><div class="sv" style="color:var(--acc)">'+fm(tot)+'</div></div><div class="sc"><div class="sl">Collected</div><div class="sv" style="color:var(--suc)">'+fm(paid)+'</div></div><div class="sc"><div class="sl">Pending</div><div class="sv" style="color:var(--wrn)">'+fm(pnd)+'</div></div><div class="sc"><div class="sl">Overdue</div><div class="sv" style="color:var(--dan)">'+fm(od)+'</div></div></div>';
+  h+='<div class="crd"><table><thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Date</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+  var sorted=D.invoices.slice().sort(function(a,b){return b.date>a.date?1:-1;});
+  for(var i=0;i<sorted.length;i++){var v=sorted[i];h+='<tr><td style="font-weight:500;color:var(--acc)">'+v.number+'</td><td>'+gc(v.client).name+'</td><td style="font-weight:600">'+fm(v.amount)+'</td><td>'+fd(v.date)+'</td><td style="color:'+(v.status==='overdue'?'var(--dan)':'var(--txt)')+'">'+fd(v.due)+'</td><td><span class="bdg '+(v.status==='paid'?'ba':v.status==='pending'?'bw':'bdd')+'">'+v.status+'</span></td><td style="display:flex;gap:4px"><button class="btn bg bs" onclick="viewInv(\''+v.id+'\')">View</button>'+(can('edit')?'<button class="btn bg bs" onclick="markPaid(\''+v.id+'\')">Paid</button>':'')+(can('del')?'<button class="btn bd bs" onclick="delInv(\''+v.id+'\')">Del</button>':'')+'</td></tr>';}
+  return h+'</tbody></table></div>';
+}
+
+function rReports(){
+  var h='<div class="crd"><table><thead><tr><th>Client</th><th>Month</th><th>Reach</th><th>Impressions</th><th>Engagement</th><th>Posts</th><th>Followers</th><th>Actions</th></tr></thead><tbody>';
+  if(D.reports.length){for(var i=0;i<D.reports.length;i++){var r=D.reports[i];h+='<tr><td style="font-weight:500">'+gc(r.client).name+'</td><td>'+r.month+'</td><td>'+Number(r.reach).toLocaleString('en-IN')+'</td><td>'+Number(r.impressions).toLocaleString('en-IN')+'</td><td style="color:var(--ac2)">'+r.engagement+'</td><td>'+r.posts+'</td><td style="color:var(--suc)">'+r.followers+'</td><td style="display:flex;gap:4px"><button class="btn bg bs" onclick="viewRep(\''+r.id+'\')">View</button>'+(can('del')?'<button class="btn bd bs" onclick="delRep(\''+r.id+'\')">Del</button>':'')+'</td></tr>';}}
+  else h+='<tr><td colspan="8"><div class="es"><div class="em">📈</div><div>No reports yet</div></div></td></tr>';
+  return h+'</tbody></table></div>';
+}
+
+function rUsers(){
+  if(!can('users'))return'<div class="es"><div class="em">🔒</div><div>Admin only</div></div>';
+  var h='<div class="crd"><table><thead><tr><th>Name</th><th>Role</th><th>PIN</th><th>Status</th><th>Permissions</th><th>Actions</th></tr></thead><tbody>';
+  for(var i=0;i<D.users.length;i++){var u=D.users[i];h+='<tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:'+u.color+'25;color:'+u.color+';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">'+u.name.charAt(0)+'</div><div><div style="font-weight:500">'+u.name+'</div><div style="font-size:10px;color:var(--mut)">'+u.username+'</div></div></div></td><td>'+rpill(u.role)+'</td><td><span style="font-family:monospace;background:var(--sur2);padding:2px 7px;border-radius:5px;letter-spacing:.15em">'+(u.id===CU.id?u.pin:'••••')+'</span></td><td><span class="bdg '+(u.active?'ba':'bm')+'">'+(u.active?'Active':'Inactive')+'</span></td><td style="font-size:11px;color:var(--mut)">'+gpl(u.role)+'</td><td style="display:flex;gap:4px"><button class="btn bg bs" onclick="editUser(\''+u.id+'\')">Edit</button>'+(u.id!==CU.id?'<button class="btn bd bs" onclick="delUser(\''+u.id+'\')">Del</button>':'<span style="font-size:10px;color:var(--mut);padding:4px">You</span>')+'</td></tr>';}
+  h+='</tbody></table></div><div style="margin-top:12px;padding:14px;background:var(--sur);border:1px solid var(--bdr);border-radius:10px"><div style="font-size:13px;font-weight:600;margin-bottom:10px">Role Summary</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">';
+  var rl=[['admin','Full access + manage users'],['manager','Add & edit, no delete'],['staff','View all + update tasks/posts'],['viewer','Read-only, no changes']];
+  for(var i=0;i<rl.length;i++)h+='<div style="background:var(--sur2);border-radius:8px;padding:10px"><div style="margin-bottom:5px">'+rpill(rl[i][0])+'</div><div style="font-size:11px;color:var(--mut)">'+rl[i][1]+'</div></div>';
+  return h+'</div></div>';
+}
+function gpl(r){if(r==='admin')return'Full + user mgmt';if(r==='manager')return'Add & edit, no del';if(r==='staff')return'View + tasks/posts';return'View only';}
+
+function rSettings(){
+  return'<div style="max-width:440px"><div class="crd" style="margin-bottom:12px"><div class="ch"><div class="ct">Agency Info</div></div><div style="padding:16px;display:flex;flex-direction:column;gap:10px"><div class="fg"><label class="fl">Agency Name</label><input class="fi" id="ag-n" value="'+D.agencyName+'" '+(can('edit')?'':'disabled')+'></div><div class="fg"><label class="fl">Owner Name</label><input class="fi" id="ag-o" value="'+(D.ownerName||'')+'" '+(can('edit')?'':'disabled')+'></div><div class="fg"><label class="fl">GST Number</label><input class="fi" id="ag-g" value="'+(D.gstNumber||'')+'" '+(can('edit')?'':'disabled')+'></div>'+(can('edit')?'<button class="btn bp" onclick="saveAgency()">Save</button>':'<p style="font-size:11px;color:var(--mut)">Role cannot edit.</p>')+'</div></div><div class="crd" style="margin-bottom:12px"><div class="ch"><div class="ct">Change My PIN</div></div><div style="padding:16px;display:flex;flex-direction:column;gap:10px"><div class="fg"><label class="fl">New PIN (4 digits)</label><input class="fi" id="np" type="password" maxlength="4" placeholder="••••"></div><button class="btn bp" onclick="changePin()">Update PIN</button></div></div><div class="crd"><div class="ch"><div class="ct">Data</div></div><div style="padding:16px;display:flex;flex-direction:column;gap:8px"><p style="font-size:12px;color:var(--mut)">Saved in browser localStorage. Export to back up.</p><div style="display:flex;gap:8px"><button class="btn bg" onclick="expData()">Export JSON</button>'+(can('del')?'<button class="btn bd" onclick="if(confirm(\'Reset all data?\'))resetData()">Reset</button>':'')+'</div></div></div></div>';
+}
+function saveAgency(){D.agencyName=document.getElementById('ag-n').value;D.ownerName=document.getElementById('ag-o').value;D.gstNumber=document.getElementById('ag-g').value;save();alert('Saved!');}
+function changePin(){var p=document.getElementById('np').value;if(!/^\d{4}$/.test(p)){alert('Must be 4 digits');return;}CU.pin=p;var u=D.users.find(function(x){return x.id===CU.id;});if(u)u.pin=p;save();alert('PIN updated!');}
+function expData(){var b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='webwonders.json';a.click();}
+function resetData(){localStorage.removeItem('ww4');location.reload();}
+
+/* ===== MODAL ===== */
+function openModal(h){document.getElementById('mbody').innerHTML=h;document.getElementById('modal').style.display='flex';}
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+/* ===== CLIENT FORMS ===== */
+function openAddClient(){openModal('<div class="mt">Add Client</div><div class="fgrid"><div class="fg"><label class="fl">Business Name</label><input class="fi" id="cn"></div><div class="fg"><label class="fl">Contact Person</label><input class="fi" id="cc"></div><div class="fg"><label class="fl">Email</label><input class="fi" id="ce" type="email"></div><div class="fg"><label class="fl">Phone</label><input class="fi" id="cph"></div><div class="fg"><label class="fl">Domain</label><input class="fi" id="cd" placeholder="example.com"></div><div class="fg"><label class="fl">Status</label><select class="fi" id="cs"><option value="active">Active</option><option value="paused">Paused</option><option value="inactive">Inactive</option></select></div><div class="fg"><label class="fl">Domain Expiry</label><input class="fi" id="cde" type="date"></div><div class="fg"><label class="fl">Email Expiry</label><input class="fi" id="cee" type="date"></div><div class="fg fgf"><label class="fl">Platforms</label><div style="display:flex;gap:12px;margin-top:4px"><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pig"> Instagram</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pfb"> Facebook</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pli"> LinkedIn</label></div></div><div class="fg fgf"><label class="fl">Notes</label><textarea class="fi" id="cno" rows="2" style="resize:vertical"></textarea></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveClient()">Add</button></div>');}
+
+function saveClient(eid){
+  var plats=['ig','fb','li'].filter(function(p){var el=document.getElementById('p'+p);return el&&el.checked;});
+  var obj={id:eid||uid(),name:document.getElementById('cn').value,contact:document.getElementById('cc').value,email:document.getElementById('ce').value,phone:document.getElementById('cph').value,domain:document.getElementById('cd').value,domainExp:document.getElementById('cde').value,emailExp:document.getElementById('cee').value,status:document.getElementById('cs').value,platforms:plats,notes:document.getElementById('cno').value};
+  if(!obj.name){alert('Name required');return;}
+  if(eid){var i=D.clients.findIndex(function(c){return c.id===eid;});D.clients[i]=obj;}else D.clients.push(obj);
+  save();closeModal();goto('clients');
+}
+
+function editClient(id){
+  var c=gc(id);
+  openModal('<div class="mt">Edit Client</div><div class="fgrid"><div class="fg"><label class="fl">Business Name</label><input class="fi" id="cn" value="'+c.name+'"></div><div class="fg"><label class="fl">Contact</label><input class="fi" id="cc" value="'+c.contact+'"></div><div class="fg"><label class="fl">Email</label><input class="fi" id="ce" type="email" value="'+c.email+'"></div><div class="fg"><label class="fl">Phone</label><input class="fi" id="cph" value="'+c.phone+'"></div><div class="fg"><label class="fl">Domain</label><input class="fi" id="cd" value="'+(c.domain||'')+'"></div><div class="fg"><label class="fl">Status</label><select class="fi" id="cs"><option value="active"'+(c.status==='active'?' selected':'')+'>Active</option><option value="paused"'+(c.status==='paused'?' selected':'')+'>Paused</option><option value="inactive"'+(c.status==='inactive'?' selected':'')+'>Inactive</option></select></div><div class="fg"><label class="fl">Domain Expiry</label><input class="fi" id="cde" type="date" value="'+(c.domainExp||'')+'"></div><div class="fg"><label class="fl">Email Expiry</label><input class="fi" id="cee" type="date" value="'+(c.emailExp||'')+'"></div><div class="fg fgf"><label class="fl">Platforms</label><div style="display:flex;gap:12px;margin-top:4px"><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pig"'+((c.platforms||[]).indexOf('ig')>=0?' checked':'')+'>Instagram</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pfb"'+((c.platforms||[]).indexOf('fb')>=0?' checked':'')+'>Facebook</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="pli"'+((c.platforms||[]).indexOf('li')>=0?' checked':'')+'>LinkedIn</label></div></div><div class="fg fgf"><label class="fl">Notes</label><textarea class="fi" id="cno" rows="2" style="resize:vertical">'+(c.notes||'')+'</textarea></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveClient(\''+id+'\')">Save</button></div>');
+}
+
+function viewClient(id){
+  var c=gc(id),cp=D.posts.filter(function(p){return p.client===id;}).slice(0,3),ci=D.invoices.filter(function(i){return i.client===id;});
+  var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div class="mt" style="margin:0">'+c.name+'</div><span class="bdg '+(c.status==='active'?'ba':c.status==='paused'?'bw':'bm')+'">'+c.status+'</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px"><div><div class="fl" style="margin-bottom:5px">Contact</div><div>'+c.contact+'</div><div style="color:var(--mut);font-size:12px">'+c.email+'</div><div style="color:var(--mut);font-size:12px">'+c.phone+'</div></div><div><div class="fl" style="margin-bottom:5px">Platforms</div><div style="display:flex;gap:5px">'+(c.platforms||[]).map(pchip).join(' ')+'</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px"><div style="background:var(--sur2);border-radius:8px;padding:10px"><div class="fl">Domain Exp</div><div style="margin-top:3px;color:'+(du(c.domainExp)<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.domainExp)+'</div></div><div style="background:var(--sur2);border-radius:8px;padding:10px"><div class="fl">Email Exp</div><div style="margin-top:3px;color:'+(du(c.emailExp)<=30?'var(--wrn)':'var(--txt)')+'">'+fd(c.emailExp)+'</div></div></div>'+(c.notes?'<div style="background:var(--sur2);border-radius:8px;padding:10px;font-size:12px;color:var(--mut);margin-bottom:14px">'+c.notes+'</div>':'');
+  h+='<div style="font-weight:600;font-size:13px;margin-bottom:8px">Posts ('+cp.length+')</div>';
+  if(cp.length){for(var i=0;i<cp.length;i++){h+='<div class="pi">'+pchip(cp[i].platform)+'<div style="flex:1;font-size:12px">'+cp[i].caption.substring(0,45)+'</div><div style="font-size:10px;color:var(--mut)">'+fd(cp[i].date)+'</div></div>';}}else h+='<div style="color:var(--mut);font-size:12px;margin-bottom:10px">No posts yet</div>';
+  h+='<div style="font-weight:600;font-size:13px;margin:10px 0 8px">Invoices ('+ci.length+')</div>';
+  if(ci.length){for(var i=0;i<ci.length;i++){var v=ci[i];h+='<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:12px"><span>'+v.number+'</span><span style="font-weight:600">'+fm(v.amount)+'</span><span class="bdg '+(v.status==='paid'?'ba':v.status==='pending'?'bw':'bdd')+'">'+v.status+'</span></div>';}}else h+='<div style="color:var(--mut);font-size:12px">No invoices</div>';
+  h+='<div class="fa"><button class="btn bg" onclick="closeModal()">Close</button>'+(can('edit')?'<button class="btn bp" onclick="closeModal();editClient(\''+id+'\')">Edit</button>':'')+'</div>';
+  openModal(h);
+}
+function delClient(id){if(!confirm('Delete client?'))return;D.clients=D.clients.filter(function(c){return c.id!==id;});save();goto('clients');}
+
+/* TASK */
+function openAddTask(){openModal('<div class="mt">Add Task</div><div class="fgrid"><div class="fg fgf"><label class="fl">Task</label><input class="fi" id="tt" placeholder="Describe task…"></div><div class="fg"><label class="fl">Client</label><select class="fi" id="tcl"><option value="">— General —</option>'+copts()+'</select></div><div class="fg"><label class="fl">Priority</label><select class="fi" id="tp"><option value="high">High</option><option value="med" selected>Medium</option><option value="low">Low</option></select></div><div class="fg"><label class="fl">Due Date</label><input class="fi" id="td" type="date" value="'+new Date().toISOString().split('T')[0]+'"></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveTask()">Add</button></div>');}
+function saveTask(){var o={id:uid(),text:document.getElementById('tt').value,client:document.getElementById('tcl').value,priority:document.getElementById('tp').value,due:document.getElementById('td').value,done:false};if(!o.text){alert('Required');return;}D.tasks.push(o);save();closeModal();goto('tasks');}
+function toggleTask(id){var t=D.tasks.find(function(x){return x.id===id;});if(t){t.done=!t.done;save();goto('tasks');}}
+function delTask(id){D.tasks=D.tasks.filter(function(t){return t.id!==id;});save();goto('tasks');}
+
+/* POST */
+function openAddPost(eid){
+  var p=eid?D.posts.find(function(x){return x.id===eid;}):null;
+  var co=D.clients.map(function(c){return'<option value="'+c.id+'"'+(p&&p.client===c.id?' selected':'')+'>'+c.name+'</option>';}).join('');
+  openModal('<div class="mt">'+(p?'Edit':'Schedule')+' Post</div><div class="fgrid"><div class="fg"><label class="fl">Client</label><select class="fi" id="pcl">'+co+'</select></div><div class="fg"><label class="fl">Platform</label><select class="fi" id="ppl"><option value="ig"'+(p&&p.platform==='ig'?' selected':'')+'>Instagram</option><option value="fb"'+(p&&p.platform==='fb'?' selected':'')+'>Facebook</option><option value="li"'+(p&&p.platform==='li'?' selected':'')+'>LinkedIn</option></select></div><div class="fg"><label class="fl">Date</label><input class="fi" id="pdt" type="date" value="'+(p?p.date:'')+'"></div><div class="fg"><label class="fl">Time</label><input class="fi" id="ptm" type="time" value="'+(p?p.time:'10:00')+'"></div><div class="fg"><label class="fl">Status</label><select class="fi" id="pst"><option value="scheduled"'+(!p||p.status==='scheduled'?' selected':'')+'>Scheduled</option><option value="draft"'+(p&&p.status==='draft'?' selected':'')+'>Draft</option><option value="posted"'+(p&&p.status==='posted'?' selected':'')+'>Posted</option></select></div><div class="fg fgf"><label class="fl">Caption</label><textarea class="fi" id="pcp" rows="3" style="resize:vertical">'+(p?p.caption:'')+'</textarea></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="savePost(\''+(eid||'')+'\')">Save</button></div>');
+}
+function editPost(id){openAddPost(id);}
+function savePost(eid){var o={id:eid||uid(),client:document.getElementById('pcl').value,platform:document.getElementById('ppl').value,date:document.getElementById('pdt').value,time:document.getElementById('ptm').value,status:document.getElementById('pst').value,caption:document.getElementById('pcp').value};if(!o.caption){alert('Caption required');return;}if(eid){var i=D.posts.findIndex(function(p){return p.id===eid;});D.posts[i]=o;}else D.posts.push(o);save();closeModal();goto('scheduler');}
+function delPost(id){D.posts=D.posts.filter(function(p){return p.id!==id;});save();goto('scheduler');}
+
+/* INVOICE */
+function openAddInvoice(){openModal('<div class="mt">New Invoice</div><div class="fgrid"><div class="fg"><label class="fl">Client</label><select class="fi" id="icl">'+copts()+'</select></div><div class="fg"><label class="fl">Invoice #</label><input class="fi" id="inum" value="INV-'+String(D.invoices.length+1).padStart(3,'0')+'"></div><div class="fg"><label class="fl">Amount (₹)</label><input class="fi" id="iamt" type="number"></div><div class="fg"><label class="fl">Status</label><select class="fi" id="ist"><option value="pending">Pending</option><option value="paid">Paid</option><option value="overdue">Overdue</option></select></div><div class="fg"><label class="fl">Invoice Date</label><input class="fi" id="idate" type="date" value="'+new Date().toISOString().split('T')[0]+'"></div><div class="fg"><label class="fl">Due Date</label><input class="fi" id="idue" type="date"></div><div class="fg fgf"><label class="fl">Description</label><input class="fi" id="idesc" placeholder="Social Media - May 2025"></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveInv()">Create</button></div>');}
+function saveInv(){var o={id:uid(),client:document.getElementById('icl').value,number:document.getElementById('inum').value,amount:document.getElementById('iamt').value,date:document.getElementById('idate').value,due:document.getElementById('idue').value,status:document.getElementById('ist').value,items:[{desc:document.getElementById('idesc').value,qty:1,rate:document.getElementById('iamt').value}]};if(!o.amount){alert('Amount required');return;}D.invoices.push(o);save();closeModal();goto('invoices');}
+function markPaid(id){var i=D.invoices.find(function(x){return x.id===id;});if(i){i.status='paid';save();goto('invoices');}}
+function delInv(id){if(!confirm('Delete?'))return;D.invoices=D.invoices.filter(function(i){return i.id!==id;});save();goto('invoices');}
+function viewInv(id){
+  var v=D.invoices.find(function(i){return i.id===id;}),c=gc(v.client);
+  var h='<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px"><div><div class="mt" style="margin:0">'+v.number+'</div><div style="color:var(--mut);font-size:12px">Web Wonders</div></div><span class="bdg '+(v.status==='paid'?'ba':v.status==='pending'?'bw':'bdd')+'" style="font-size:12px;padding:5px 12px">'+v.status.toUpperCase()+'</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px"><div><div class="fl">Billed To</div><div style="font-size:14px;font-weight:500;margin-top:4px">'+c.name+'</div><div style="font-size:12px;color:var(--mut)">'+c.contact+'</div><div style="font-size:12px;color:var(--mut)">'+c.email+'</div></div><div><div class="fl">Details</div><div style="font-size:12px;margin-top:4px"><span style="color:var(--mut)">Date:</span> '+fd(v.date)+'</div><div style="font-size:12px"><span style="color:var(--mut)">Due:</span> '+fd(v.due)+'</div>'+(D.gstNumber?'<div style="font-size:12px"><span style="color:var(--mut)">GST:</span> '+D.gstNumber+'</div>':'')+'</div></div><table style="margin-bottom:14px"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody>';
+  var items=v.items||[];for(var i=0;i<items.length;i++)h+='<tr><td>'+items[i].desc+'</td><td>'+items[i].qty+'</td><td>'+fm(items[i].rate)+'</td><td style="font-weight:600">'+fm(items[i].qty*items[i].rate)+'</td></tr>';
+  h+='</tbody></table><div style="text-align:right;padding:14px;background:var(--sur2);border-radius:8px;margin-bottom:16px"><div style="font-size:12px;color:var(--mut)">Total</div><div class="itot">'+fm(v.amount)+'</div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Close</button>'+(v.status!=='paid'&&can('edit')?'<button class="btn bp" onclick="markPaid(\''+id+'\');closeModal()">Mark Paid</button>':'')+'</div>';
+  openModal(h);
+}
+
+/* REPORTS */
+function openAddReport(){openModal('<div class="mt">Add Report</div><div class="fgrid"><div class="fg"><label class="fl">Client</label><select class="fi" id="rcl">'+copts()+'</select></div><div class="fg"><label class="fl">Month</label><input class="fi" id="rmo" placeholder="May 2025"></div><div class="fg"><label class="fl">Reach</label><input class="fi" id="rre" type="number"></div><div class="fg"><label class="fl">Impressions</label><input class="fi" id="rim" type="number"></div><div class="fg"><label class="fl">Engagement</label><input class="fi" id="ren" placeholder="4.2%"></div><div class="fg"><label class="fl">Posts</label><input class="fi" id="rpo" type="number"></div><div class="fg"><label class="fl">Followers</label><input class="fi" id="rfo" placeholder="+320"></div><div class="fg fgf"><label class="fl">Notes</label><textarea class="fi" id="rno" rows="2"></textarea></div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveRep()">Save</button></div>');}
+function saveRep(){var o={id:uid(),client:document.getElementById('rcl').value,month:document.getElementById('rmo').value,reach:document.getElementById('rre').value,impressions:document.getElementById('rim').value,engagement:document.getElementById('ren').value,posts:document.getElementById('rpo').value,followers:document.getElementById('rfo').value,notes:document.getElementById('rno').value};D.reports.push(o);save();closeModal();goto('reports');}
+function viewRep(id){var r=D.reports.find(function(x){return x.id===id;}),c=gc(r.client);var h='<div class="mt">'+c.name+' — '+r.month+'</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">';var m1=[['Reach',r.reach],['Impressions',r.impressions],['Posts',r.posts]];for(var i=0;i<m1.length;i++)h+='<div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:10px;color:var(--mut);text-transform:uppercase">'+m1[i][0]+'</div><div style="font-size:20px;font-weight:700;margin-top:4px">'+Number(m1[i][1]).toLocaleString('en-IN')+'</div></div>';var m2=[['Engagement',r.engagement],['Followers',r.followers]];for(var i=0;i<m2.length;i++)h+='<div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:10px;color:var(--mut);text-transform:uppercase">'+m2[i][0]+'</div><div style="font-size:20px;font-weight:700;margin-top:4px;color:var(--ac2)">'+m2[i][1]+'</div></div>';h+='</div>'+(r.notes?'<div style="background:var(--sur2);border-radius:8px;padding:12px;font-size:12px;color:var(--mut)">'+r.notes+'</div>':'')+'<div class="fa"><button class="btn bg" onclick="closeModal()">Close</button></div>';openModal(h);}
+function delRep(id){D.reports=D.reports.filter(function(r){return r.id!==id;});save();goto('reports');}
+
+/* USERS */
+function buildCP(cur){var h='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:4px" id="cpk">';for(var i=0;i<COLORS.length;i++){var col=COLORS[i];h+='<div onclick="pickC(\''+col+'\')" style="width:22px;height:22px;border-radius:50%;background:'+col+';cursor:pointer;border:2px solid '+(col===cur?'#fff':'transparent')+';transition:border-color .15s" id="cp'+i+'"></div>';}return h+'</div><input type="hidden" id="uc" value="'+(cur||'#6c63ff')+'">';}
+function pickC(c){pickedColor=c;document.getElementById('uc').value=c;var els=document.querySelectorAll('#cpk div');for(var i=0;i<els.length;i++)els[i].style.borderColor=(COLORS[i]===c?'#fff':'transparent');}
+
+function openAddUser(){
+  pickedColor='#6c63ff';
+  openModal('<div class="mt">Add User</div><div class="fgrid"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="un" placeholder="e.g. Riya Patel"></div><div class="fg"><label class="fl">Username</label><input class="fi" id="uu" placeholder="e.g. riya"></div><div class="fg"><label class="fl">4-Digit PIN</label><input class="fi" id="upin" type="password" maxlength="4" placeholder="••••"></div><div class="fg"><label class="fl">Role</label><select class="fi" id="ur"><option value="manager">Manager</option><option value="staff">Staff</option><option value="viewer">Viewer</option></select></div><div class="fg"><label class="fl">Status</label><select class="fi" id="ua"><option value="1">Active</option><option value="0">Inactive</option></select></div><div class="fg fgf"><label class="fl">Avatar Color</label>'+buildCP('#6c63ff')+'</div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveNewUser()">Add User</button></div>');
+}
+function saveNewUser(){var pin=document.getElementById('upin').value;if(!/^\d{4}$/.test(pin)){alert('PIN must be 4 digits');return;}var o={id:uid(),name:document.getElementById('un').value,username:document.getElementById('uu').value,pin:pin,role:document.getElementById('ur').value,color:document.getElementById('uc').value||pickedColor,active:document.getElementById('ua').value==='1'};if(!o.name||!o.username){alert('Name & username required');return;}D.users.push(o);save();closeModal();goto('users');}
+
+function editUser(id){
+  var u=D.users.find(function(x){return x.id===id;});
+  pickedColor=u.color||'#6c63ff';
+  var isMe=u.id===CU.id;
+  openModal('<div class="mt">Edit: '+u.name+'</div><div class="fgrid"><div class="fg"><label class="fl">Full Name</label><input class="fi" id="un" value="'+u.name+'"></div><div class="fg"><label class="fl">Username</label><input class="fi" id="uu" value="'+u.username+'"></div><div class="fg"><label class="fl">New PIN (blank = keep)</label><input class="fi" id="upin" type="password" maxlength="4" placeholder="••••"></div><div class="fg"><label class="fl">Role</label><select class="fi" id="ur" '+(isMe?'disabled':'')+'>'+['admin','manager','staff','viewer'].map(function(r){return'<option value="'+r+'"'+(u.role===r?' selected':'')+'>'+cap(r)+'</option>';}).join('')+'</select></div><div class="fg"><label class="fl">Status</label><select class="fi" id="ua" '+(isMe?'disabled':'')+'><option value="1"'+(u.active?' selected':'')+'>Active</option><option value="0"'+(!u.active?' selected':'')+'>Inactive</option></select></div><div class="fg fgf"><label class="fl">Avatar Color</label>'+buildCP(u.color||'#6c63ff')+'</div></div><div class="fa"><button class="btn bg" onclick="closeModal()">Cancel</button><button class="btn bp" onclick="saveEditUser(\''+id+'\')">Save</button></div>');
+}
+function saveEditUser(id){var u=D.users.find(function(x){return x.id===id;});var pv=document.getElementById('upin').value;if(pv&&!/^\d{4}$/.test(pv)){alert('PIN must be 4 digits');return;}u.name=document.getElementById('un').value;u.username=document.getElementById('uu').value;u.color=document.getElementById('uc').value||pickedColor;if(u.id!==CU.id){u.role=document.getElementById('ur').value;u.active=document.getElementById('ua').value==='1';}if(pv)u.pin=pv;if(u.id===CU.id){CU.name=u.name;CU.color=u.color;if(pv)CU.pin=pv;setupSide();}save();closeModal();goto('users');}
+function delUser(id){if(!confirm('Delete user?'))return;D.users=D.users.filter(function(u){return u.id!==id;});save();goto('users');}
+
+/* ===== INIT ===== */
+load();seed();initLogin();
+</script>
+</body>
+</html>
